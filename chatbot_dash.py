@@ -14,7 +14,7 @@ import openai
 def create_jsonlfile():
 
     #Paste the API KEY
-    openai.api_key ="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"   
+    openai.api_key ="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"   
 
     #Create the documents file as jsonl file
     document_path = "jsonlfiles/gpt3.jsonl"
@@ -132,7 +132,7 @@ controls = dbc.InputGroup(
 app.layout = dbc.Container(
     fluid=False,
     children=[
-        Header("Topic: Artist", app),
+        Header("Topic: Male Artist", app),
         html.Hr(),
         dcc.Store(id="store-conversation", data=""),
         conversation,

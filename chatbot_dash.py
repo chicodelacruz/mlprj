@@ -14,14 +14,14 @@ import openai
 def create_jsonlfile():
 
     #Paste the API KEY
-    openai.api_key ="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"   
+    openai.api_key ="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"   
 
     #Create the documents file as jsonl file
     document_path = "jsonlfiles/gpt3.jsonl"
     file = openai.File.create(file=open(document_path), purpose='answers')
     return file
 
-def generateAnswers(user_question,jsonl_file,temp = 0.1,maxtoken = 50):
+def generateAnswers(user_question, jsonl_file, temp=0.6, maxtoken=50):
    
    try:
     response =openai.Answer.create(
@@ -30,9 +30,13 @@ def generateAnswers(user_question,jsonl_file,temp = 0.1,maxtoken = 50):
         question=user_question,       
         
         file=jsonl_file["id"], 
-        examples_context="Johnny Depp is perhaps one of the most versatile actors of his day and age in Hollywood.", 
-        examples=[["Is he the most versatile actors of his day?", "Yes, the most famous actors today"]
-        ],
+        examples_context="I was asked to write twenty yes or no questions about this text of questions", 
+        examples=[["Is he the most versatile actors of his day?", "Yes"],
+                  ["Is he a painter?", "No"],
+                  ["Is he a theater actor?", "Maybe"],
+                  ["Is he a movie actor?", "Yes"],
+                  ["What is the color of the eyes?", "Question should be answerable by yes or no"]
+                  ],
         max_rerank=10,
         max_tokens=maxtoken,
         temperature=temp,
@@ -42,7 +46,7 @@ def generateAnswers(user_question,jsonl_file,temp = 0.1,maxtoken = 50):
     return response
    
    except :
-       response ={"answers": [" Please answer seriously or else I will kick you out in this game"] }
+       response ={"answers": [" Not related, please ask again. "] }
        return response
 
 print("Creating file !")
@@ -51,11 +55,11 @@ print("File created!! File id: ",file["id"])
 
 
 def Header(name, app):
-    title = html.H1(name, style={"margin-top": 20})
+    title = html.H1(name, style={"margin-top": 10})
     # logo = html.Img(
     #     src=app.get_asset_url("logo.jpeg"), style={"float": "left", "height": 100}
     # )
-    return dbc.Row([ dbc.Col(title, md=8)])
+    return dbc.Row([dbc.Col(title, md=8)])
 
 
 def textbox(text, box="AI", name="Chico"):
@@ -96,7 +100,7 @@ def textbox(text, box="AI", name="Chico"):
 
 
 description = """
-Philippe is the principal architect at a condo-development firm in Paris. He lives with his girlfriend of five years in a 2-bedroom condo, with a small dog named Coco. Since the pandemic, his firm has seen a  significant drop in condo requests. As such, he’s been spending less time designing and more time on cooking,  his favorite hobby. He loves to cook international foods, venturing beyond French cuisine. But, he is eager  to get back to architecture and combine his hobby with his occupation. That’s why he’s looking to create a  new design for the kitchens in the company’s current inventory. Can you give him advice on how to do that?
+Chico is a Fullstack Developer.
 """
 
 # Authentication
@@ -124,7 +128,7 @@ conversation = html.Div(
 
 controls = dbc.InputGroup(
     children=[
-        dbc.Input(id="user-input", placeholder="Ask questions...", type="text"),
+        dbc.Input(id="user-input", placeholder="ask...", type="text"),
         dbc.InputGroupAddon(dbc.Button("Submit", id="submit"), addon_type="append"),
     ]
 )
@@ -132,7 +136,7 @@ controls = dbc.InputGroup(
 app.layout = dbc.Container(
     fluid=False,
     children=[
-        Header("Topic: Male Artist", app),
+        Header("Category for today: Male Actor", app),
         html.Hr(),
         dcc.Store(id="store-conversation", data=""),
         conversation,
@@ -172,7 +176,7 @@ def run_chatbot(n_clicks, n_submit, user_input, chat_history):
     if user_input is None or user_input == "":
         return chat_history, None
 
-    name = "AI"
+    name = "Chico"
 
     prompt = dedent(
         f"""

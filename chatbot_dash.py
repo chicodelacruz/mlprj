@@ -14,7 +14,7 @@ import openai
 def create_jsonlfile():
 
     #Paste the API KEY
-    openai.api_key ="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"   
+    openai.api_key ="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"   
 
     #Create the documents file as jsonl file
     document_path = "jsonlfiles/gpt3.jsonl"
